@@ -1,0 +1,23 @@
+input:
+  label: ""
+  kafka:
+    addresses:
+      - localhost:9092
+    topics: ["test_benthos_perf"]
+    consumer_group: benthos_consumer_group
+    client_id: benthos_kafka_input
+    checkpoint_limit: 1
+output:
+  try:
+    - http_client:
+        url: http://localhost:3070
+        verb: POST
+        retries: 3
+        headers:
+          Content-Type: application/json
+        rate_limit: ""
+        timeout: 5s
+        max_in_flight: 1
+        retry_period: 5s
+    - stdout:
+        codec: lines
